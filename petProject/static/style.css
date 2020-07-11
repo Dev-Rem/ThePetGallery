@@ -68,6 +68,11 @@
   .details-content ul{
     list-style-type: none;
   }
+
+.details-content img{
+  width: 150px;
+
+}
 .details-buttons{
   width: 100%;
   height: 100%;

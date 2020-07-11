@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.views.decorators.http import require_http_methods
 from django.contrib.auth.models import User
 from .models import Pet
 from .forms import PetForm
@@ -22,6 +23,7 @@ def create(request):
     return render(request, "pet/create.html", {"form": form})
 
 
+@require_http_methods(["GET", "POST"])
 def view(request, pk):
     pet = get_object_or_404(Pet, pk=pk)
     if request.method == "POST":
@@ -35,8 +37,8 @@ def edit(request, pk):
     form = PetForm(instance=pet)
     if request.method == "POST":
         form = PetForm(instance=pet, data=request.POST)
-        if petform.is_valid():
-            petform.save()
+        if form.is_valid():
+            form.save()
             return redirect("pet:index")
     else:
         form = PetForm(instance=pet)

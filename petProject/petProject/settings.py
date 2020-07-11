@@ -121,6 +121,7 @@ STATICFILES_DIRS = [
     "/Users/Rem_files/Desktop/Web_dev/petProject/petProject/static/style.css",
 ]
 
+
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
