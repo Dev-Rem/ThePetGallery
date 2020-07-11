@@ -1,0 +1,14 @@
+{% extends 'pet/base_layout.html' %}
+
+
+
+{% if user.is_authenticated %}
+  {% block content %}
+
+    {{ user.email }}
+    {{ user.username }}
+  {% endblock%}
+{% else %}
+  <p>Oops you are not logged in yet please do so. <a href="/login">Log in</a> </p>
+
+{% endif %}

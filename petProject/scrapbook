@@ -1,0 +1,85 @@
+# class Owner(models.Model):
+#     owner_id = models.AutoField(primary_key=True)
+#     fullname = models.CharField(max_length=150, default=None)
+#     username = models.CharField(max_length=50, default=None)
+#     password = models.CharField(max_length=50, default=None, null=True)
+#     confirm_password = models.CharField(max_length=50, default=None, null=True)
+#     profile_photo = models.FileField(upload_to="images/", null=True)
+#     street = models.CharField(max_length=50, default=None)
+#     city = models.CharField(max_length=50, default=None)
+#     country = models.CharField(max_length=50, default=None)
+#     email = models.EmailField(max_length=254, default=None)
+#     date = models.DateField(auto_now=False, auto_now_add=True)
+#
+#     def full_name(self):
+#
+
+
+# class Default_image(models.Model):
+#     default_image = models.ImageField(upload_to="images/")
+
+
+# owner_id = models.ForeignKey(Owner, on_delete=models.CASCADE)
+
+
+# class PetOwnerSignUp(forms.ModelForm):
+#     class Meta:
+#         model = Owner
+#         fields = [
+#             "fullname",
+#             "username",
+#             "email",
+#             "street",
+#             "city",
+#             "country",
+#             "password",
+#             "confirm_password",
+#             "profile_photo",
+#         ]
+#
+#         widgets = {
+#             "fullname": forms.TextInput(
+#                 attrs={"class": "form-control", "placeholder": "Enter your full name"}
+#             ),
+#             "username": forms.TextInput(
+#                 attrs={"class": "form-control", "placeholder": "eg: firstname1234"}
+#             ),
+#             "email": forms.EmailInput(
+#                 attrs={
+#                     "class": "form-control",
+#                     "id": "exampleInputEmail1",
+#                     "aria-describedby": "emailHelp",
+#                     "placeholder": "Enter email...",
+#                 }
+#             ),
+#             "street": forms.TextInput(
+#                 attrs={"class": "form-control", "placeholder": "eg: szigeti ut, 31"}
+#             ),
+#             "city": forms.TextInput(
+#                 attrs={"class": "form-control", "placeholder": "eg: Pécs"}
+#             ),
+#             "country": forms.TextInput(
+#                 attrs={"class": "form-control", "placeholder": "eg: Hungary"}
+#             ),
+#             "password": forms.PasswordInput(
+#                 attrs={
+#                     "class": "form-control",
+#                     "id": "exampleInputPassword1",
+#                     "placeholder": "Password",
+#                 }
+#             ),
+#             "confirm_password": forms.PasswordInput(
+#                 attrs={
+#                     "class": "form-control",
+#                     "id": "exampleInputPassword1",
+#                     "placeholder": "Re-enter password",
+#                 }
+#             ),
+#             "profile_photo": forms.FileInput(
+#                 attrs={
+#                     "class": "form-control-file",
+#                     "id": "exampleInputFile",
+#                     "aria-describedby": "fileHelp",
+#                 }
+#             ),
+#         }

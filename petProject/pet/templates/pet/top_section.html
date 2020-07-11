@@ -1,0 +1,28 @@
+
+
+	  <!-- Automatic Slideshow Images -->
+		<div class="slide_container">
+			<img class="slide_image" src="{% static 'pet_gallery/pets.jpg' %}" alt="Slide Image" >
+			<img class="slide_image" src="{% static 'pet_gallery/pets1.jpg' %}" alt="Slide Images">
+			<img class="slide_image" src="{% static 'pet_gallery/pets2.jpg' %}" alt="Slide Images">
+			<img class="slide_image" src="{% static 'pet_gallery/pets3.jpg' %}" alt="Slide Images">
+			<img class="slide_image" src="{% static 'pet_gallery/pets4.jpg' %}" alt="Slide Images">
+		</div>
+
+		<script type="text/javascript">
+			// Automatic Slideshow
+		var myIndex = 0;
+		carousel();
+
+		function carousel() {
+		  var i;
+		  var x = document.getElementsByClassName("slide_image");
+		  for (i = 0; i < x.length; i++) {
+		    x[i].style.display = "none";
+		  }
+		  myIndex++;
+		  if (myIndex > x.length) {myIndex = 1}
+		  x[myIndex-1].style.display = "block";
+		  setTimeout(carousel, 4000);
+		}
+		</script>
