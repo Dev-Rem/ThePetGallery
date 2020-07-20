@@ -1,9 +1,9 @@
-{% extends 'pet/base_layout.html' %}
+{% extends 'home/base_layout.html' %}
 
 {% load crispy_forms_tags %}
 
 {% block content %}
-<div class="details">
+<div class="card">
   <form method="post">
     {% csrf_token %}
     {{ form|crispy }}

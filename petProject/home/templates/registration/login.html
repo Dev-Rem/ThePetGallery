@@ -2,14 +2,13 @@
 
 {% load crispy_forms_tags %}
 
-
 {% block content %}
-<div class="formc-container">
-  <form enctype="multipart/form-data" method="post">
+<div class="details">
+  <form class="form-group" method="post">
     {% csrf_token %}
     {{ form|crispy }}
+    <p>Don't have an account? <a href="/sign-up/">Sign Up</a> </p>
     <button type="submit" class="btn btn-primary">Submit</button>
   </form>
 </div>
-
-{% endblock%}
+{% endblock %}
