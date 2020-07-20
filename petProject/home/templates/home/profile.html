@@ -1,0 +1,35 @@
+{% extends 'home/base_layout.html' %}
+
+
+
+{% if user.is_authenticated %}
+  {% block content %}
+  <div class="card">
+    <div class="profile-picture">
+
+    </div>
+    <div class="profile-info">
+      <ul>
+        {% if account.username %}
+          <li>{{ account.username }}</li>
+        {% endif %}
+        {% if account.name %}
+          <li>{{ account.name }}</li>
+        {% endif %}
+        {% if account.animal %}
+          <li>{{ account.animal }}</li>
+        {% endif %}
+        {% if account.breed %}
+          <li>{{ account.breed }}</li>
+        {% endif %}
+        {% if account.bio %}
+          <li>{{ account.bio }}</li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+  {% endblock%}
+{% else %}
+  <p>Oops you are not logged in yet please do so. <a href="/login">Log in</a> </p>
+
+{% endif %}
