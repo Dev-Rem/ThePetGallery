@@ -8,11 +8,11 @@ from django.http import HttpResponseRedirect
 
 
 # Create your views here.
+
+# class IndexView()
 def index(request):
     posts = Post.objects.order_by("-date")
-    for post in posts:
-        account = Account.objects.get(username=post.account.username)
-    return render(request, "home/index.html", {"posts": posts, "account": account})
+    return render(request, "home/index.html", {"posts": posts,})
 
 
 def create(request):
@@ -70,21 +70,12 @@ def sign_up(request):
         return redirect("/login")
     else:
         form = SignUpForm()
-
     return render(request, "home/sign_up.html", {"form": form})
 
 
-def profile(request):
-    account = Account.objects.get(email=request.user)
+def profile(request, username):
+    account = Account.objects.get(username=username)
     return render(request, "home/profile.html", {"account": account})
-
-
-def nav_profile(request, username):
-    account = Account.objects.get(email=request.user)
-    username = account.username
-    return render(
-        request, "home/nav_bar.html", {"account": account, "username": username}
-    )
 
 
 def contact_us(request):
