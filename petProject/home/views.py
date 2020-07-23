@@ -20,52 +20,61 @@ def index(request):
 
 
 def create_post(request):
-    ImageFormSet = formset_factory(ImageForm, extra=2, max_num=2)
+    ImageFormSet = formset_factory(ImageForm, extra=3, max_num=3)
     if request.method == "POST":
-        form = PostForm(request.POST or None, request.FILES or None)
-        image_form = ImageForm(request.POST or None, request.FILES or None)
-        if form.is_valid() and image_form.is_valid():
-            new_post = form.save(commit=False)
-            new_post.account = request.user
-            new_post.save()
+        form = PostForm(request.POST or None)
+        formset = ImageFormSet(request.POST or None, request.FILES or None)
+        if form.is_valid() and formset.is_valid():
+            post = form.save(commit=False)
+            post.account = request.user
+            post.save()
 
-            image = image_form.save(commit=False)
-            image.post = new_post
-            image.save()
+            for form in formset:
+                try:
+                    image = Image(post=post, image=form.cleaned_data["image"])
+                    image.save()
+                except Exception as e:
+                    break
 
             return redirect("home:index")
     else:
         form = PostForm()
-        image_form = ImageForm()
-    return render(request, "home/create.html", {"form": form, "image_form": image_form})
+        formset = ImageFormSet()
+    return render(request, "home/create.html", {"form": form, "formset": formset})
 
 
 def edit_post(request, pk):
     image_form_class = ImageForm
     post = get_object_or_404(Post, pk=pk)
-    image = Image.objects.get(post=post)
     form = PostForm(request.POST, instance=post)
-    image_form = image_form_class(request.POST, files=request.FILES, instance=image)
+    ImageFormSet = formset_factory(ImageForm, extra=3, max_num=3)
+    formset = ImageFormSet(request.POST or None, request.FILES or None)
     if request.method == "POST":
-        if form.is_valid() and image_form.is_valid():
+        if form.is_valid() and formset.is_valid():
             form.save()
-            photo = Image(post=post, image=image_form.cleaned_data.get("image"))
-            d = Image.objects.get(id=image.id)
-            d.image = photo.image
-            d.save()
+            data = Image.objects.filter(post=post)
+            for index, form in enumerate(formset):
+                if form.cleaned_data:
+                    if form.cleaned_data["id"] is None:
+                        photo = Image(post=post, image=form.cleaned_data.get("image"))
+                        photo.save()
+                    else:
+                        photo = Image(post=post, image=form.cleaned_data.get("image"))
+                        d = Image.objects.get(id=data[index].id)
+                        d.image = photo.image
+                        d.save()
             return redirect("/" + str(post.id) + "/view/")
     else:
         form = PostForm(instance=post)
-    return render(
-        request, "home/edit_post.html", {"form": form, "image_form": image_form}
-    )
+        formset = ImageFormSet(queryset=Image.objects.filter(post=post))
+    return render(request, "home/edit_post.html", {"form": form, "formset": formset})
 
 
 def view_post(request, pk):
     form_class = CommentForm
     form = form_class(request.POST or None)
     post = get_object_or_404(Post, pk=pk)
-    image = get_object_or_404(Image, post=post)
+    images = Image.objects.filter(post=post)
     comments = Comment.objects.filter(post=post).order_by("-date")
     if request.method == "POST":
         if form.is_valid():
@@ -77,7 +86,7 @@ def view_post(request, pk):
     return render(
         request,
         "home/view.html",
-        {"post": post, "comments": comments, "form": form, "image": image,},
+        {"post": post, "comments": comments, "form": form, "images": images,},
     )
 
 

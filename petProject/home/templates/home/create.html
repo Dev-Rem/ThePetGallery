@@ -9,7 +9,10 @@
     <form enctype="multipart/form-data" method="post">
       {% csrf_token %}
       {{ form|crispy }}
-      {{ image_form|crispy }} 
+      {{ formset.management_form }}
+      {% for form in formset %}
+        {{ form |crispy }}
+      {% endfor %}
       <button type="submit" class="btn btn-primary">Submit</button>
     </form>
   </div>

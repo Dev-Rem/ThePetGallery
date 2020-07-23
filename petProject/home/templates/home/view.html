@@ -7,7 +7,16 @@
       <a href="/{{ post.id }}/edit"><button type="button" name="button" class="btn btn-secondary"> Edit</button></a>
     </div>
     <div class="details-content">
-      <img class="card-image" src="{{ image.image.url }}" alt="Pet image">
+      {% for image in images %}
+        <div class="w3-content w3-display-container">
+          <div class="w3-display-container mySlides">
+            <img src="{{ image.image.url }}" style="width:100%">
+            <button class="w3-button w3-display-left w3-black" onclick="plusDivs(-1)">&#10094;</button>
+            <button class="w3-button w3-display-right w3-black" onclick="plusDivs(1)">&#10095;</button>
+          </div>
+        </div>
+      {% endfor %}
+
     </div>
     <div class="details-content">
       <p>{{ post.caption }}</p>
