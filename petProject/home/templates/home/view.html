@@ -4,13 +4,19 @@
   <div class="card">
     <div class="details-header">
       <h2>{{ post.account.username | title }}</h2>
+      <a href="/{{ post.id }}/edit"><button type="button" name="button" class="btn btn-secondary"> Edit</button></a>
     </div>
     <div class="details-content">
-      <img class="card-image" src="{{ post.image.url }}" alt="Pet image">
+      <img class="card-image" src="{{ image.image.url }}" alt="Pet image">
     </div>
     <div class="details-content">
       <p>{{ post.caption }}</p>
-      <p>{{ post.likes }}</p>
+      <p>{{ post.likes.count }}</p>
+      <!-- <form method="post">
+        {% csrf_token %}
+      <button type="submit" value="{{ like }}" class="btn btn-primary">Like</button>
+      </form> -->
+
     </div>
     <div class="details-buttons">
         <form method="post">
