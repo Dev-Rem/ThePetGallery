@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_http_methods
 from post.forms import PostForm, CommentForm, ImageForm
-from user.forms import SignUpForm
+from user.forms import SignUpForm, SignUpEditForm
 from user.models import Account
 from post.models import Post, Comment, Image
 from django.http import HttpResponseRedirect
@@ -16,7 +16,9 @@ from django.urls import reverse
 @login_required
 def index(request):
     posts = Post.objects.order_by("-date")
-    return render(request, "home/index.html", {"posts": posts,})
+    for post in posts:
+        images = post.image_set.all()
+    return render(request, "home/index.html", {"posts": posts, "images": images})
 
 
 def create_post(request):
@@ -35,7 +37,6 @@ def create_post(request):
                     image.save()
                 except Exception as e:
                     break
-
             return redirect("home:index")
     else:
         form = PostForm()
@@ -66,6 +67,7 @@ def edit_post(request, pk):
             return redirect("/" + str(post.id) + "/view/")
     else:
         form = PostForm(instance=post)
+        # queryset giving issues fix ASAP
         formset = ImageFormSet(queryset=Image.objects.filter(post=post))
     return render(request, "home/edit_post.html", {"form": form, "formset": formset})
 
@@ -90,14 +92,15 @@ def view_post(request, pk):
     )
 
 
-def edit_comment(request, pk):
+def edit_comment(request):
     form_class = CommentForm
-    comment = get_object_or_404(Comment, pk=pk)
+    comment = get_object_or_404(Comment, id=request.POST.get["edit_comment"])
     form = form_class(request.POST, instance=comment)
     if request.method == "POST":
         if form.is_valid():
-            form.save()
-            return redirect("view_post",)
+            comment.comment = form.cleaned_data["comment"]
+            comment.save()
+            return redirect("home:view_post", pk=comment.post.id)
     return render(request, "home/edit_comment.html", {"form": form})
 
 
@@ -112,22 +115,26 @@ def sign_up(request):
     return render(request, "home/sign_up.html", {"form": form})
 
 
-def profile(request, username):
-    account = Account.objects.get(username=username)
-    return render(request, "home/profile.html", {"account": account})
+def profile(request, pk):
+    account = Account.objects.get(pk=pk)
+    posts = Post.objects.filter(account=account)
+    for post in posts:
+        images = post.image_set.all()
+        print(post.image_set.all())
+    return render(request, "home/profile.html", {"account": account, "posts": posts})
 
 
-def edit_profile(request, username):
-    account = get_object_or_404(Account, username=username)
-    form = form_class(request.POST, request.FILES, instance=account)
+def edit_profile(request, pk):
+    form_class = SignUpEditForm
+    account = get_object_or_404(Account, pk=pk)
     if request.method == "POST":
+        form = form_class(request.POST, request.FILES, instance=account)
         if form.is_valid():
             form.save()
-            return redirect("home:profile")
+            return redirect("home:profile", pk=pk)
     else:
-        form = PostForm(instance=post)
-    return render(request, "home/edit.html", {"form": form})
-    pass
+        form = SignUpEditForm(instance=account)
+    return render(request, "home/edit_profile.html", {"form": form})
 
 
 def contact_us(request):

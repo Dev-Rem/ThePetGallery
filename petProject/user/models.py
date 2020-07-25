@@ -40,12 +40,13 @@ class Account(AbstractBaseUser):
     email = models.EmailField(verbose_name="email", max_length=100, unique=True)
     username = models.CharField(verbose_name="username", max_length=50, unique=True)
     name = models.CharField(verbose_name="name", max_length=100)
-    breed = models.CharField(max_length=30, null=True)
-    animal = models.CharField(max_length=50, null=True)
-    bio = models.TextField(null=True)
+    breed = models.CharField(max_length=30, null=True, blank=True)
+    animal = models.CharField(max_length=50, null=True, blank=True)
+    bio = models.TextField(null=True, blank=True)
     date_of_birth = models.DateField(
-        default=date.today(),
         help_text="Please use the following format: <em>YYYY-MM-DD</em>.",
+        null=True,
+        blank=True,
     )
     date_joined = models.DateTimeField(
         verbose_name="date joined", auto_now=False, auto_now_add=True
