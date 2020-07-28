@@ -15,7 +15,7 @@ from user.models import Account
 
 @login_required
 def index(request):
-    posts = Post.objects.order_by("-date")
+    posts = Post.objects.filter(is_active=True).order_by("-date",)
     for post in posts:
         images = post.image_set.all()
     return render(request, "home/index.html", {"posts": posts, "images": images})
@@ -72,6 +72,15 @@ def edit_post(request, pk):
     return render(request, "home/edit_post.html", {"form": form, "formset": formset})
 
 
+def delete_post(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    images = Image.objects.filter(post=post)
+    if request.method == "POST":
+        post.delete()
+        return redirect("home:view", pk=post.id)
+    return render(request, "home/delete_post.html", {"post": post, "images": images})
+
+
 def view_post(request, pk):
     form_class = CommentForm
     form = form_class(request.POST or None)
@@ -79,11 +88,17 @@ def view_post(request, pk):
     images = Image.objects.filter(post=post)
     comments = Comment.objects.filter(post=post).order_by("-date")
     if request.method == "POST":
-        if form.is_valid():
-            new_comment = form.save(commit=False)
-            new_comment.post = post
-            new_comment.save()
-            return HttpResponseRedirect(request.path_info)
+        if "comment" in request.POST:
+            if form.is_valid():
+                new_comment = form.save(commit=False)
+                new_comment.post = post
+                new_comment.save()
+                return redirect(request.path_info)
+        elif "archive" in request.POST:
+            post.is_active = False
+            post.is_archived = True
+            post.save()
+            return redirect("home:index")
     return render(
         request,
         "home/view.html",

@@ -5,7 +5,12 @@
     <div class="details-header">
       <h2>{{ post.account.username | title }}</h2>
       {% if request.user == post.account %}
-      <a href="/{{ post.id }}/edit"><button type="button" name="button" class="btn btn-secondary"> Edit</button></a>
+      <a href="/{{ post.id }}/edit"><button type="button" name="edit" class="btn btn-secondary"> Edit</button></a>
+      <form method="post">
+        {% csrf_token %}
+        <button type="submit" name="archive" value="archive" class="btn btn-secondary"> Archive</button>
+      </form>
+      <a href="/{{ post.id }}/delete"><button type="button" name="delete" class="btn btn-danger"> Delete</button></a>
       {% endif %}
     </div>
     <div class="details-content">
@@ -33,7 +38,7 @@
         <form method="post">
           {% csrf_token %}
           {{ form|crispy }}
-          <button type="submit" class="btn btn-primary">Comment</button>
+          <button type="submit" name="comment" value="comment" class="btn btn-primary">Comment</button>
         </form>
 
     </div>

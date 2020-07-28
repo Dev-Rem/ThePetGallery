@@ -5,7 +5,7 @@ from .models import Post, Comment, Image
 class PostForm(ModelForm):
     class Meta:
         model = Post
-        exclude = ("account", "id", "likes")
+        exclude = ("account", "is_active", "is_deleted", "is_archived", "id", "likes")
 
 
 class CommentForm(ModelForm):

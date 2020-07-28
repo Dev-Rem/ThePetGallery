@@ -9,6 +9,9 @@ class Post(models.Model):
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
     id = models.AutoField(primary_key=True, null=False)
     caption = models.CharField(max_length=1000, null=True)
+    is_active = models.BooleanField(default=True)
+    is_archived = models.BooleanField(default=False)
+    is_deleted = models.BooleanField(default=False)
     date = models.DateTimeField(auto_now=False, auto_now_add=True)
     likes = models.ManyToManyField(Account, related_name="likes", blank=True)
 
