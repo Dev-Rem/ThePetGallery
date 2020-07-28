@@ -12,5 +12,5 @@ urlpatterns = [
     path("sign-up/", views.sign_up, name="sign_up"),
     path("<int:pk>/profile/", views.profile, name="profile"),
     path("<int:pk>/edit-profile/", views.edit_profile, name="edit_profile"),
-    path("edit-comment", views.edit_comment, name="edit_comment"),
+    path("<int:pk>/edit-comment", views.edit_comment, name="edit_comment"),
 ]

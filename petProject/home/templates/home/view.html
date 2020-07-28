@@ -41,12 +41,9 @@
       {% for comment in comments %}
         <p>{{ comment.comment }}</p>
         {% if request.user == post.account %}
-        <form method="post">
-          {% csrf_token %}
-        <button type="submit" name="edit_comment" value="{{ comment.id }}" class="btn btn-primary">Edit comment</button>
-        </form>
+          <a href="/{{ comment.id }}/edit-comment"><button type="button" name="edit_comment" class="btn btn-primary">Edit comment</button></a>
         {% endif %}
-        {% endfor %}
+      {% endfor %}
     </div>
   </div>
   {% endblock %}

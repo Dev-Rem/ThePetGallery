@@ -1,13 +1,13 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.views.decorators.http import require_http_methods
-from post.forms import PostForm, CommentForm, ImageForm
-from user.forms import SignUpForm, SignUpEditForm
-from user.models import Account
-from post.models import Post, Comment, Image
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.forms import formset_factory
 from django.urls import reverse
+from django.shortcuts import render, redirect, get_object_or_404
+from django.views.decorators.http import require_http_methods
+from post.models import Post, Comment, Image
+from post.forms import PostForm, CommentForm, ImageForm
+from user.forms import SignUpForm, SignUpEditForm
+from user.models import Account
 
 
 # Create your views here.
@@ -84,7 +84,6 @@ def view_post(request, pk):
             new_comment.post = post
             new_comment.save()
             return HttpResponseRedirect(request.path_info)
-
     return render(
         request,
         "home/view.html",
@@ -92,16 +91,18 @@ def view_post(request, pk):
     )
 
 
-def edit_comment(request):
+def edit_comment(request, pk):
     form_class = CommentForm
-    comment = get_object_or_404(Comment, id=request.POST.get["edit_comment"])
-    form = form_class(request.POST, instance=comment)
+    comment = get_object_or_404(Comment, pk=pk)
+    edit_comment_form = form_class(request.POST or None, instance=comment)
     if request.method == "POST":
-        if form.is_valid():
-            comment.comment = form.cleaned_data["comment"]
+        if edit_comment_form.is_valid():
+            comment.comment = edit_comment_form.cleaned_data["comment"]
             comment.save()
-            return redirect("home:view_post", pk=comment.post.id)
-    return render(request, "home/edit_comment.html", {"form": form})
+            return redirect("home:view", pk=comment.post.id)
+    return render(
+        request, "home/edit_comment.html", {"edit_comment_form": edit_comment_form}
+    )
 
 
 def sign_up(request):
