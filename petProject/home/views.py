@@ -104,13 +104,16 @@ def view_post(request, pk):
     post = get_object_or_404(Post, pk=pk, is_active=True)
     images = Image.objects.filter(post=post)
     comments = Comment.objects.filter(post=post).order_by("-date")
-    for comment in comments:
-        print(comments)
     if request.method == "POST":
+        print(request.POST)
         if "comment" in request.POST:
             if form.is_valid():
-                new_comment = form.save(commit=False)
-                new_comment.post = post
+                new_comment = Comment.objects.create(
+                    post=post, comment=form.cleaned_data["comment"]
+                )
+                # new_comment.comment = form.save(commit=False)
+                # new_comment.post = post
+                #
                 new_comment.save()
                 return redirect(request.path_info)
         elif "archive" in request.POST:
