@@ -10,8 +10,9 @@ urlpatterns = [
     path("<int:pk>/edit/", views.edit_post, name="edit"),
     path("contact-us/", views.contact_us, name="contact"),
     path("sign-up/", views.sign_up, name="sign_up"),
-    path("<int:pk>/profile/", views.profile, name="profile"),
-    path("<int:pk>/edit-profile/", views.edit_profile, name="edit_profile"),
+    path("<str:username>/profile/", views.profile, name="profile"),
+    path("<str:username>/edit-profile/", views.edit_profile, name="edit_profile"),
     path("<int:pk>/edit-comment", views.edit_comment, name="edit_comment"),
     path("<int:pk>/delete", views.delete_post, name="delete"),
+    path("<str:username>/archive/", views.archive, name="archive"),
 ]

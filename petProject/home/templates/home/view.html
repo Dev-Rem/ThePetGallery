@@ -28,17 +28,18 @@
     <div class="details-content">
       <p>{{ post.caption }}</p>
       <p>{{ post.likes.count }}</p>
-      <!-- <form method="post">
+      <form method="post">
         {% csrf_token %}
-      <button type="submit" value="{{ like }}" class="btn btn-primary">Like</button>
-      </form> -->
+        <button type="submit" name="like" class="btn btn-primary">Like</button>
+        <button type="submit" name="dislike" class="btn btn-primary">Dislike</button>
+      </form>
 
     </div>
     <div class="details-buttons">
         <form method="post">
           {% csrf_token %}
           {{ form|crispy }}
-          <button type="submit" name="comment" value="comment" class="btn btn-primary">Comment</button>
+          <button type="submit" name="comment" class="btn btn-primary">Comment</button>
         </form>
 
     </div>

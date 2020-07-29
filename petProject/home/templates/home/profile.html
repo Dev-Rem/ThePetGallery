@@ -27,16 +27,19 @@
         {% endif %}
       </ul>
     </div>
-    <a href="/{{ request.user.id }}/edit-profile"> <button type="button" name="button">Edit</button> </a>
+    <a href="/{{ request.user.username }}/edit-profile"> <button type="button" name="archive">Edit</button> </a>
+    <a href="/{{ account.username }}/archive"> <button type="button" name="archive">Archive</button> </a>
     <ul>
       {% for post in posts %}
-      {% for image in post.image_set.all %}
       <li>
         <div class="profile-posts-card">
-          <a href="/{{ post.id }}/view"><img class="card-image" src="{{ image.image.url }}" alt="Pet image"></a>
+          {% for image in post.image_set.all %}
+            {% if forloop.first %}
+              <a href="/{{ post.id }}/view"><img class="card-image" src="{{ image.image.url }}" alt="Pet image"></a>
+            {% endif %}
+          {% endfor %}
         </div>
       </li>
-      {% endfor %}
       {% endfor %}
     </ul>
 

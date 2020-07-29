@@ -1,4 +1,3 @@
-from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.forms import formset_factory
 from django.urls import reverse
@@ -16,9 +15,9 @@ from user.models import Account
 @login_required
 def index(request):
     posts = Post.objects.filter(is_active=True).order_by("-date",)
-    for post in posts:
-        images = post.image_set.all()
-    return render(request, "home/index.html", {"posts": posts, "images": images})
+    # for post in posts:
+    #     images = post.image_set.all()
+    return render(request, "home/index.html", {"posts": posts})
 
 
 def create_post(request):
@@ -47,10 +46,12 @@ def create_post(request):
 def edit_post(request, pk):
     image_form_class = ImageForm
     post = get_object_or_404(Post, pk=pk)
-    form = PostForm(request.POST, instance=post)
     ImageFormSet = formset_factory(ImageForm, extra=3, max_num=3)
-    formset = ImageFormSet(request.POST or None, request.FILES or None)
+    form = None
+    formset = None
     if request.method == "POST":
+        form = PostForm(request.POST, instance=post)
+        formset = ImageFormSet(request.POST or None, request.FILES or None)
         if form.is_valid() and formset.is_valid():
             form.save()
             data = Image.objects.filter(post=post)
@@ -64,7 +65,7 @@ def edit_post(request, pk):
                         d = Image.objects.get(id=data[index].id)
                         d.image = photo.image
                         d.save()
-            return redirect("/" + str(post.id) + "/view/")
+            return redirect("home:view", pk=post.id)
     else:
         form = PostForm(instance=post)
         # queryset giving issues fix ASAP
@@ -76,17 +77,35 @@ def delete_post(request, pk):
     post = get_object_or_404(Post, pk=pk)
     images = Image.objects.filter(post=post)
     if request.method == "POST":
-        post.delete()
-        return redirect("home:view", pk=post.id)
+        post.is_active = False
+        post.is_deleted = True
+        post.save()
+        return redirect("home:index")
     return render(request, "home/delete_post.html", {"post": post, "images": images})
+
+
+def archive(request, username):
+    account = Account.objects.get(username=username)
+    posts = Post.objects.filter(is_archived=True, account=account).order_by("-date",)
+    images = None
+    for post in posts:
+        images = post.image_set.all()
+    if request.method == "POST":
+        post.is_active = True
+        post.is_archived = False
+        post.save()
+        return redirect("home:index")
+    return render(request, "home/archive.html", {"posts": posts, "images": images})
 
 
 def view_post(request, pk):
     form_class = CommentForm
     form = form_class(request.POST or None)
-    post = get_object_or_404(Post, pk=pk)
+    post = get_object_or_404(Post, pk=pk, is_active=True)
     images = Image.objects.filter(post=post)
     comments = Comment.objects.filter(post=post).order_by("-date")
+    for comment in comments:
+        print(comments)
     if request.method == "POST":
         if "comment" in request.POST:
             if form.is_valid():
@@ -99,6 +118,14 @@ def view_post(request, pk):
             post.is_archived = True
             post.save()
             return redirect("home:index")
+        elif "like" in request.POST:
+            post.likes.add(request.user)
+            post.save()
+            return redirect(request.path_info)
+        elif "dislike" in request.POST:
+            post.likes.remove(request.user)
+            post.save()
+            return redirect(request.path_info)
     return render(
         request,
         "home/view.html",
@@ -131,23 +158,20 @@ def sign_up(request):
     return render(request, "home/sign_up.html", {"form": form})
 
 
-def profile(request, pk):
-    account = Account.objects.get(pk=pk)
-    posts = Post.objects.filter(account=account)
-    for post in posts:
-        images = post.image_set.all()
-        print(post.image_set.all())
-    return render(request, "home/profile.html", {"account": account, "posts": posts})
+def profile(request, username):
+    account = Account.objects.get(username=username)
+    posts = Post.objects.filter(account=account, is_active=True).order_by("-date")
+    return render(request, "home/profile.html", {"account": account, "posts": posts,},)
 
 
-def edit_profile(request, pk):
+def edit_profile(request, username):
     form_class = SignUpEditForm
-    account = get_object_or_404(Account, pk=pk)
+    account = get_object_or_404(Account, username=username)
     if request.method == "POST":
         form = form_class(request.POST, request.FILES, instance=account)
         if form.is_valid():
             form.save()
-            return redirect("home:profile", pk=pk)
+            return redirect("home:profile", username=username)
     else:
         form = SignUpEditForm(instance=account)
     return render(request, "home/edit_profile.html", {"form": form})

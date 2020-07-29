@@ -14,9 +14,11 @@
 {% for post in posts %}
       <li class="card">
         <div class="card-container">
-          <a href="{{ post.account.id }}/profile"><h5 class="card-header">{{ post.account.username | title}}</h5></a>
-          {% for image in images %}
+          <a href="{{ post.account.username }}/profile"><h5 class="card-header">{{ post.account.username | title}}</h5></a>
+          {% for image in post.image_set.all %}
+            {% if forloop.first %}
               <a href="/{{ post.id }}/view"><img class="card-image" src="{{ image.image.url }}" alt="Pet image"></a>
+            {% endif %}
           {% endfor %}
           <p>{{ post.caption }}</p>
         </div>
