@@ -108,12 +108,8 @@ def view_post(request, pk):
         print(request.POST)
         if "comment" in request.POST:
             if form.is_valid():
-                new_comment = Comment.objects.create(
-                    post=post, comment=form.cleaned_data["comment"]
-                )
-                # new_comment.comment = form.save(commit=False)
-                # new_comment.post = post
-                #
+                new_comment = form.save(commit=False)
+                new_comment.post = post
                 new_comment.save()
                 return redirect(request.path_info)
         elif "archive" in request.POST:
@@ -129,6 +125,14 @@ def view_post(request, pk):
             post.likes.remove(request.user)
             post.save()
             return redirect(request.path_info)
+        elif "like_comment" in request.POST:
+            comment = Comment.objects.get(pk=request.POST.get("like_comment"))
+            comment.likes.add(request.user)
+            comment.save()
+        elif "dislike_comment" in request.POST:
+            comment = Comment.objects.get(pk=request.POST.get("dislike_comment"))
+            comment.likes.remove(request.user)
+            comment.save()
     return render(
         request,
         "home/view.html",

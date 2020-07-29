@@ -46,8 +46,14 @@
     <div class="details-content">
       {% for comment in comments %}
         <p>{{ comment.comment }}</p>
+        <p>{{ comment.likes.count }}</p>
         {% if request.user == post.account %}
-          <a href="/{{ comment.id }}/edit-comment"><button type="button" name="edit_comment" class="btn btn-primary">Edit comment</button></a>
+          <a href="/{{ comment.id }}/edit-comment"><button type="button" name="edit_comment" class="btn btn-primary">Edit</button></a>
+          <form method="post">
+            {% csrf_token %}
+            <button type="submit" name="like_comment" value="{{ comment.id }}" class="btn btn-primary">Like</button>
+            <button type="submit" name="dislike_comment" value="{{ comment.id }}" class="btn btn-primary">Dislike</button>
+          </form>
         {% endif %}
       {% endfor %}
     </div>
