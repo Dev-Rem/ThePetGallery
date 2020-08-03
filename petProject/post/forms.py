@@ -11,10 +11,10 @@ class PostForm(ModelForm):
 class CommentForm(ModelForm):
     class Meta:
         model = Comment
-        exclude = ("post", "likes")
+        exclude = ("post", "account", "is_active", "is_deleted", "likes")
 
 
 class ImageForm(ModelForm):
     class Meta:
         model = Image
-        exclude = ("date", "post")
+        exclude = ("date", "account", "post")

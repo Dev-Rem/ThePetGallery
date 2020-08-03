@@ -7,8 +7,8 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  max-width: 500px;
-  width: 100%;
+  max-width: 100%;
+  width: 500px;
   height: 100%;
   margin: 0 auto;
   margin-top: 10px;
@@ -19,12 +19,10 @@
 }
 
 .card div a {
-  color: #343A40;
+  color: #236BE8;
+  text-decoration: none;
 }
 
-.inner{
-  padding: 30px;
-}
 .card-image{
   height: 500px;
   width: 100%;
@@ -32,14 +30,17 @@
   object-fit: cover;
 }
 
-  .details-header{
-    text-align: left;
+.details-header{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    padding-left: 15px;
   }
 
-  .details-content{
+.details-content{
     width: 100%;
     height: 100%;
-    padding: 20px 0px 20px 0px;
     border-bottom: 1px solid #98A2AC;
     border-top: 1px solid #98A2AC;
   }
@@ -55,17 +56,93 @@
 .details-buttons{
   width: 100%;
   height: 100%;
-  padding: 20px 0px 20px 0px;
+  padding-left: 15px;
+  padding-right: 10px;
+}
+.profile-posts {
+  padding: 0;
+  list-style-type: none;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.post-card img{
+  height: 249px;
+  width: 249px;
+  border: 1px solid #98A2AC;
+  object-fit: cover;
+}
+
+.profile-picture{
+  width: 300px;
+  max-width: 100%;
+}
+
+.profile-picture img{
+  margin-top: 20px;
+  margin-left: 20px;
+  height: 200px;
+  max-width: 200px;
+  width: 100%;
+  border-radius: 55%;
+  object-fit: cover;
 }
 
 .profile-info{
-  width: 100%;
-  height: 100%;
-  padding: 20px 0px 20px 0px;
+  margin-top: 50px;
+  width: 300px;
+  max-width: 100%;
 }
+
 .profile-info ul{
   list-style-type: none;
+  flex-grow: 4;
 }
+
+.followers-following{
+  margin-top: 50px;
+  display: flex;
+  flex-direction: row;
+  width: 300px;
+  max-width: 100%;
+}
+
 .mySlides {display:none}
 .w3-left, .w3-right, .w3-badge {cursor:pointer}
 .w3-badge {height:13px;width:13px;padding:0}
+
+.font-style{color:#236BE8;}
+
+#myBtn {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  right: 30px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: #236BE8 ;
+  color: white;
+  cursor: pointer;
+  padding: 15px;
+  border-radius: 20px;
+  font-size: 18px;
+}
+
+#myBtn:hover {
+  background-color: #555;
+}
+
+.flex-comment{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+}
+.flex-comment p{
+  width: 500px;
+}
+.flex-comment form{
+  width: 50px;
+}

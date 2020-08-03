@@ -1,61 +1,92 @@
 {% extends 'home/base_layout.html' %}
 {% load crispy_forms_tags %}
-  {% block content %}
-  <div class="card">
-    <div class="details-header">
-      <h2>{{ post.account.username | title }}</h2>
-      {% if request.user == post.account %}
-      <a href="/{{ post.id }}/edit"><button type="button" name="edit" class="btn btn-secondary"> Edit</button></a>
-      <form method="post">
-        {% csrf_token %}
-        <button type="submit" name="archive" value="archive" class="btn btn-secondary"> Archive</button>
-      </form>
-      <a href="/{{ post.id }}/delete"><button type="button" name="delete" class="btn btn-danger"> Delete</button></a>
-      {% endif %}
-    </div>
-    <div class="details-content">
-      {% for image in images %}
-        <div class="w3-content w3-display-container">
-          <div class="w3-display-container mySlides">
-            <img class="card-image"  src="{{ image.image.url }}" style="width:100%">
-            <button class="w3-button w3-display-left w3-black" onclick="plusDivs(-1)">&#10094;</button>
-            <button class="w3-button w3-display-right w3-black" onclick="plusDivs(1)">&#10095;</button>
-          </div>
-        </div>
-      {% endfor %}
-
-    </div>
-    <div class="details-content">
-      <p>{{ post.caption }}</p>
-      <p>{{ post.likes.count }}</p>
-      <form method="post">
-        {% csrf_token %}
-        <button type="submit" name="like" class="btn btn-primary">Like</button>
-        <button type="submit" name="dislike" class="btn btn-primary">Dislike</button>
-      </form>
-
-    </div>
-    <div class="details-buttons">
-        <form method="post">
-          {% csrf_token %}
-          {{ form|crispy }}
-          <button type="submit" class="btn btn-primary">Comment</button>
-        </form>
-
-    </div>
-    <div class="details-content">
-      {% for comment in comments %}
-        <p>{{ comment.comment }}</p>
-        <p>{{ comment.likes.count }}</p>
-        {% if request.user == post.account %}
-          <a href="/{{ comment.id }}/edit-comment"><button type="button" name="edit_comment" class="btn btn-primary">Edit</button></a>
+{% block content %}
+<div class="card">
+  <div class="details-header">
+    <a href="/{{ post.account.username }}/profile"><h3 class="details-header">{{ post.account.username | title}}</h3></a>
+    {% if request.user == post.account %}
+      <div class="btn-group dropright" style="width:70px">
+        <button class="btn  dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <svg width="2em" height="2em" viewBox="0 0 16 16" class="bi bi-list" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M2.5 11.5A.5.5 0 0 1 3 11h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 3 7h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 3 3h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+          </svg>
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a href="/{{ post.id }}/edit">
+            <button type="button" name="edit" style="color:blue" class="btn"> Edit</button>
+          </a>
           <form method="post">
             {% csrf_token %}
-            <button type="submit" name="like_comment" value="{{ comment.id }}" class="btn btn-primary">Like</button>
-            <button type="submit" name="dislike_comment" value="{{ comment.id }}" class="btn btn-primary">Dislike</button>
+            <button type="submit" name="archive" value="archive" style="color:blue" class="btn"> Archive</button>
           </form>
-        {% endif %}
-      {% endfor %}
-    </div>
+          <a href="/{{ post.id }}/delete">
+            <button type="button" name="delete" style="color:Red" class="btn"> Delete</button>
+          </a>
+        </div>
+      </div>
+    {% endif %}
   </div>
-  {% endblock %}
+
+  <div class="details-content">
+    {% for image in images %}
+    <div class="w3-content w3-display-container">
+      <div class="w3-display-container mySlides">
+        <img class="card-image" src="{{ image.image.url }}" style="width:100%">
+        <button class="w3-button w3-display-left w3-black" onclick="plusDivs(-1)">&#10094;</button>
+        <button class="w3-button w3-display-right w3-black" onclick="plusDivs(1)">&#10095;</button>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="details-buttons">
+    <h6>{{ post.caption }}</h6>
+    <h6>{{ post.likes.count }}</h6>
+    <form method="post">
+      {% csrf_token %}
+      <button type="submit" name="like" style="color:blue" class="btn">Like</button>
+      <button type="submit" name="dislike" style="color:Red" class="btn">Dislike</button>
+    </form>
+
+    <form method="post">
+      {% csrf_token %}
+      {{ form|crispy }}
+      <button type="submit" style="color:blue" class="btn">Comment</button>
+    </form>
+
+    {% for comment in comments %}
+    <hr>
+    <div class="flex-comment">
+      <p>{{ comment.comment }}</p>
+      {% if request.user == comment.account %}
+      <form method="post">
+        {% csrf_token %}
+        <div class="btn-group dropright">
+          <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-three-dots-vertical" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+            </svg>
+          </button>
+          <div class="dropdown-menu">
+            <a href="/{{ comment.id }}/edit-comment">
+              <button type="button" style="color:blue" name="edit_comment" class="btn">Edit</button>
+            </a>
+            <button type="submit" name="delete_comment" value="{{ comment.id }}" style="color:Red" class="btn">Delete</button>
+          </div>
+        </div>
+      </form>
+      {% endif %}
+    </div>
+
+    <h6>{{ comment.likes.count }}</h6>
+
+        <form method="post">
+          {% csrf_token %}
+          <button type="submit" name="like_comment" value="{{ comment.id }}" style="color:blue" class="btn">Like</button>
+          <button type="submit" name="dislike_comment" value="{{ comment.id }}" style="color:red" class="btn">Dislike</button>
+        </form>
+
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

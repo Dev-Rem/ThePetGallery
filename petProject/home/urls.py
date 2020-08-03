@@ -15,4 +15,5 @@ urlpatterns = [
     path("<int:pk>/edit-comment", views.edit_comment, name="edit_comment"),
     path("<int:pk>/delete", views.delete_post, name="delete"),
     path("<str:username>/archive/", views.archive, name="archive"),
+    path("profile-photo/", views.profile_photo, name="profile_photo"),
 ]

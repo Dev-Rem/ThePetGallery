@@ -15,8 +15,16 @@ from user.models import Account
 @login_required
 def index(request):
     posts = Post.objects.filter(is_active=True).order_by("-date",)
-    # for post in posts:
-    #     images = post.image_set.all()
+    for post in posts:
+        if request.method == "POST":
+            if "like" in request.POST:
+                post.likes.add(request.user)
+                post.save()
+                return redirect(request.path_info)
+            elif "dislike" in request.POST:
+                post.likes.remove(request.user)
+                post.save()
+                return redirect(request.path_info)
     return render(request, "home/index.html", {"posts": posts})
 
 
@@ -25,18 +33,23 @@ def create_post(request):
     if request.method == "POST":
         form = PostForm(request.POST or None)
         formset = ImageFormSet(request.POST or None, request.FILES or None)
-        if form.is_valid() and formset.is_valid():
-            post = form.save(commit=False)
-            post.account = request.user
-            post.save()
-
-            for form in formset:
-                try:
-                    image = Image(post=post, image=form.cleaned_data["image"])
-                    image.save()
-                except Exception as e:
-                    break
-            return redirect("home:index")
+        for image_dict in formset.cleaned_data:
+            if "image" in image_dict.keys():
+                if form.is_valid() and formset.is_valid():
+                    post = form.save(commit=False)
+                    post.account = request.user
+                    post.save()
+                    print(formset.cleaned_data)
+                    for image_form in formset.cleaned_data:
+                        if not image_form:
+                            continue
+                        else:
+                            image = Image(post=post, image=image_form["image"])
+                            image.save()
+                    return redirect("home:index")
+                break
+            else:
+                return redirect(request.path_info)
     else:
         form = PostForm()
         formset = ImageFormSet()
@@ -103,18 +116,16 @@ def view_post(request, pk):
     form = form_class(request.POST or None)
     post = get_object_or_404(Post, pk=pk, is_active=True)
     images = Image.objects.filter(post=post)
-    comments = Comment.objects.filter(post=post).order_by("-date")
+    comments = Comment.objects.filter(post=post, is_active=True).order_by("-date")
     if request.method == "POST":
-        print(request.POST)
         if "comment" in request.POST:
             if form.is_valid():
                 new_comment = form.save(commit=False)
-                new_comment.post = post
+                new_comment.post, new_comment.account = post, request.user
                 new_comment.save()
                 return redirect(request.path_info)
         elif "archive" in request.POST:
-            post.is_active = False
-            post.is_archived = True
+            post.is_active, post.is_archived = False, True
             post.save()
             return redirect("home:index")
         elif "like" in request.POST:
@@ -132,6 +143,10 @@ def view_post(request, pk):
         elif "dislike_comment" in request.POST:
             comment = Comment.objects.get(pk=request.POST.get("dislike_comment"))
             comment.likes.remove(request.user)
+            comment.save()
+        elif "delete_comment" in request.POST:
+            comment = Comment.objects.get(pk=request.POST.get("delete_comment"))
+            comment.is_active, comment.is_deleted = False, True
             comment.save()
     return render(
         request,
@@ -156,7 +171,7 @@ def edit_comment(request, pk):
 
 def sign_up(request):
     if request.method == "POST":
-        form = SignUpForm(request.POST)
+        form = SignUpForm(request.POST or None, request.FILES or None)
         if form.is_valid():
             form.save()
         return redirect("/login")
@@ -165,19 +180,58 @@ def sign_up(request):
     return render(request, "home/sign_up.html", {"form": form})
 
 
+def profile_photo(request):
+    try:
+        account = Account.objects.get(email=request.user)
+        if Image.objects.filter(account=account).exists():
+            return redirect("home:index")
+    except:
+        if request.method == "POST":
+            form = ImageForm(request.POST or None, request.FILES or None)
+            if form.is_valid():
+                photo = form.save(commit=False)
+                photo.account = request.user
+                if photo.image:
+                    photo.save()
+                else:
+                    photo.image = "static/default_img.jpg"
+                    photo.save()
+                return redirect("home:index")
+        else:
+            form = ImageForm()
+        return render(request, "home/profile_photo.html", {"form": form})
+
+
 def profile(request, username):
     account = Account.objects.get(username=username)
+    try:
+        image = Image.objects.get(account=account)
+    except:
+        image = None
     posts = Post.objects.filter(account=account, is_active=True).order_by("-date")
-    return render(request, "home/profile.html", {"account": account, "posts": posts,},)
+    return render(
+        request,
+        "home/profile.html",
+        {"account": account, "posts": posts, "image": image},
+    )
 
 
 def edit_profile(request, username):
     form_class = SignUpEditForm
     account = get_object_or_404(Account, username=username)
+    form = form_class(request.POST, request.FILES, instance=account)
     if request.method == "POST":
-        form = form_class(request.POST, request.FILES, instance=account)
+        print(form.data)
         if form.is_valid():
-            form.save()
+            # account.profile_photo = form.cleaned_data["profile_photo"]
+            account.name = form.cleaned_data["name"]
+            account.username = form.cleaned_data["username"]
+            account.email = form.cleaned_data["email"]
+            account.breed = form.cleaned_data["breed"]
+            account.animal = form.cleaned_data["animal"]
+            account.bio = form.cleaned_data["bio"]
+            account.date_of_birth = form.cleaned_data["date_of_birth"]
+            account.save()
             return redirect("home:profile", username=username)
     else:
         form = SignUpEditForm(instance=account)

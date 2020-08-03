@@ -1,51 +1,87 @@
+
 {% extends 'home/base_layout.html' %}
-
-
-
+{% load static %}
 {% if user.is_authenticated %}
   {% block content %}
-  <div class="card">
-    <div class="profile-picture">
-
-    </div>
-    <div class="profile-info">
-      <ul>
-        {% if account.username %}
+  <div class="">
+    <div class="details-header">
+      <div class="profile-picture">
+        {% if image == None %}
+          <img src="{% static 'default_img.jpg' %}" alt="">
+        {% else %}
+          <img src="{{ image.image.url }}" alt="Profile Photo">
+        {% endif %}
+      </div>
+      <div class="profile-info">
+        <ul>
+          {% if account.username %}
           <li>{{ account.username }}</li>
-        {% endif %}
-        {% if account.name %}
+          {% endif %} {% if account.name %}
           <li>{{ account.name }}</li>
-        {% endif %}
-        {% if account.animal %}
+          {% endif %} {% if account.animal %}
           <li>{{ account.animal }}</li>
-        {% endif %}
-        {% if account.breed %}
+          {% endif %} {% if account.breed %}
           <li>{{ account.breed }}</li>
-        {% endif %}
-        {% if account.bio %}
+          {% endif %} {% if account.bio %}
           <li>{{ account.bio }}</li>
-        {% endif %}
-      </ul>
-    </div>
-    <a href="/{{ request.user.username }}/edit-profile"> <button type="button" name="archive">Edit</button> </a>
-    <a href="/{{ account.username }}/archive"> <button type="button" name="archive">Archive</button> </a>
-    <ul>
-      {% for post in posts %}
-      <li>
-        <div class="profile-posts-card">
-          {% for image in post.image_set.all %}
-            {% if forloop.first %}
-              <a href="/{{ post.id }}/view"><img class="card-image" src="{{ image.image.url }}" alt="Pet image"></a>
-            {% endif %}
-          {% endfor %}
+          {% endif %}
+        </ul>
+      </div>
+      <div class="followers-following">
+        <h4>Following</h4>
+        <h4>Followers</h4>
+      </div>
+        {% if account == request.user %}
+        <div class="btn-group dropright" style="width:70px; height:50px; margin-top:20px">
+          <button class="btn  dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <svg width="2em" height="2em" viewBox="0 0 16 16" class="bi bi-list" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M2.5 11.5A.5.5 0 0 1 3 11h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 3 7h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 3 3h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+            </svg>
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a href="/{{ request.user.username }}/edit-profile">
+              <button type="button" name="archive" style="color:blue" class="btn">Edit Profile</button>
+            </a>
+            <a href="/{{ account.username }}/archive">
+              <button type="button" name="archive" style="color:blue" class="btn">Archive</button>
+            </a>
+            <a href="/logout">
+              <button style="color:red"class="btn" type="button">Logout</button>
+            </a>
+          </div>
         </div>
-      </li>
-      {% endfor %}
-    </ul>
+        {% endif %}
+    </div>
+    <div class="details-buttons">
+
+      <hr>
+    </div>
+<div class="details-content">
+  {% if posts %}
+  <ul class="profile-posts">
+    {% for post in posts %}
+    <li>
+      <div class="post-card">
+        {% for image in post.image_set.all %}
+          {% if forloop.first %}
+            <a href="/{{ post.id }}/view"><img class="card-image" src="{{ image.image.url }}" alt="Pet image"></a>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </li>
+    {% endfor %}
+  {% else %}
+      <div class="no-post">
+        <img src="https://img.icons8.com/clouds/100/000000/dog-paw-print.png"/>
+      </div>
+  </ul>
+  {% endif %}
+</div>
+
 
   </div>
   {% endblock%}
-{% else %}
+  {% else %}
   <p>Oops you are not logged in yet please do so. <a href="/login">Log in</a> </p>
 
 {% endif %}

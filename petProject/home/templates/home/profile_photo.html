@@ -1,0 +1,21 @@
+{% extends 'home/base_layout.html' %}
+
+{% load crispy_forms_tags %}
+
+    {% block content %}
+    <div style="margin-top:50px" class="card">
+      <div class="details-header">
+        <h3 style="margin-top:50px" >Upload a profile picture so other users can identify you.</h3>
+      </div>
+
+      <div class="details-buttons">
+        <hr>
+        <form class="form-group" enctype="multipart/form-data" method="post" >
+          {% csrf_token %}
+          {{ form|crispy }}
+          <button type="submit" class="btn btn-primary">Upload</button>
+          <a href="{% url 'home:index' %}"><button type="button" class="btn" name="button">Not now</button></a>
+        </form>
+      </div>
+    </div>
+    {% endblock %}

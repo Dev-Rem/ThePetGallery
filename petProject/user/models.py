@@ -42,6 +42,7 @@ class Account(AbstractBaseUser):
     name = models.CharField(verbose_name="name", max_length=100)
     breed = models.CharField(max_length=30, null=True, blank=True)
     animal = models.CharField(max_length=50, null=True, blank=True)
+    profile_photo = models.ImageField(upload_to="images/", blank=True)
     bio = models.TextField(null=True, blank=True)
     date_of_birth = models.DateField(
         help_text="Please use the following format: <em>YYYY-MM-DD</em>.",

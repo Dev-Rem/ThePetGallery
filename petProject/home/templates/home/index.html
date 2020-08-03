@@ -1,28 +1,36 @@
 {% extends 'home/base_layout.html' %}
-
 {% block content %}
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
 {% if user.is_authenticated %}
-  <a href="/create" class="create-post">
-    <svg width="2em" height="2em" viewBox="0 0 16 16" class="bi bi-plus-square" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-      <path fill-rule="evenodd" d="M8 3.5a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5H4a.5.5 0 0 1 0-1h3.5V4a.5.5 0 0 1 .5-.5z"/>
-      <path fill-rule="evenodd" d="M7.5 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0V8z"/>
-      <path fill-rule="evenodd" d="M14 1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
-    </svg>
+<a href="/create" class="create-post">
+  <svg width="2em" height="2em" viewBox="0 0 16 16" class="bi bi-plus-square" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path fill-rule="evenodd" d="M8 3.5a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5H4a.5.5 0 0 1 0-1h3.5V4a.5.5 0 0 1 .5-.5z" />
+    <path fill-rule="evenodd" d="M7.5 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0V8z" />
+    <path fill-rule="evenodd" d="M14 1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+  </svg>
 </a>
 {% endif %}
+
 <ul>
-{% for post in posts %}
-      <li class="card">
-        <div class="card-container">
-          <a href="{{ post.account.username }}/profile"><h5 class="card-header">{{ post.account.username | title}}</h5></a>
-          {% for image in post.image_set.all %}
-            {% if forloop.first %}
-              <a href="/{{ post.id }}/view"><img class="card-image" src="{{ image.image.url }}" alt="Pet image"></a>
-            {% endif %}
-          {% endfor %}
-          <p>{{ post.caption }}</p>
-        </div>
-      </li>
-{% endfor %}
-</ul >
+  {% for post in posts %}
+  <li class="card">
+      <a class="details-header" href="{{ post.account.username }}/profile"><h3 >{{ post.account.username | title}}</h3></a>
+      {% for image in post.image_set.all %}
+        {% if forloop.first %}
+          <a href="/{{ post.id }}/view"><img class="card-image" src="{{ image.image.url }}" alt="Pet image"></a>
+        {% endif %}
+      {% endfor %}
+      <div style="margin-top:20px" class="details-buttons">
+        <p>{{ post.caption }}</p>
+        <p>{{ post.likes.count }}</p>
+        <form method="post">
+          {% csrf_token %}
+          <button type="submit" name="like" style="color:blue" class="btn">Like</button>
+          <button type="submit" name="dislike" style="color:Red" class="btn">Dislike</button>
+        </form>
+      </div>
+  </li>
+  {% endfor %}
+</ul>
+
 {% endblock %}
