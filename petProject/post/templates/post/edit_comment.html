@@ -1,0 +1,17 @@
+ {% extends 'home/base_layout.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="card">
+  <div class="details-header">
+    <h2 style="margin-top:30px">Edit comment</h2>
+  </div>
+  <div class="details-buttons">
+    <form  method="post">
+      {% csrf_token %}
+      {{ form|crispy }}
+      <a href="/{{ comment.post.id }}/view"><button style="color:red; margin-bottom: 30px" type="button" class="btn">Cancel</button></a>
+      <button type="submit" style="color:blue; margin-bottom: 30px;" class="btn">Update comment</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

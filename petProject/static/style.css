@@ -1,4 +1,8 @@
 
+body{
+  background-image: url('background.png');
+  background-size: auto;
+}
 .create-post{
   color: #343A40;
   margin-left: 20px;
@@ -37,6 +41,10 @@
     justify-content: space-between;
     padding-left: 15px;
   }
+.details-header h3{
+  text-decoration: none;
+  color: #343A40;
+}
 
 .details-content{
     width: 100%;
@@ -45,19 +53,17 @@
     border-top: 1px solid #98A2AC;
   }
 
-.details-content ul{
-    list-style-type: none;
-  }
+.details-content ul{list-style-type: none;}
+.details-content img{width: 150px;}
 
-.details-content img{
-  width: 150px;
-
-}
 .details-buttons{
   width: 100%;
   height: 100%;
   padding-left: 15px;
   padding-right: 10px;
+}
+.details-buttons h6{
+  font-size: 14px;
 }
 .profile-posts {
   padding: 0;
@@ -111,7 +117,6 @@
 .mySlides {display:none}
 .w3-left, .w3-right, .w3-badge {cursor:pointer}
 .w3-badge {height:13px;width:13px;padding:0}
-
 .font-style{color:#236BE8;}
 
 #myBtn {
@@ -122,17 +127,14 @@
   z-index: 99;
   border: none;
   outline: none;
-  background-color: #236BE8 ;
-  color: white;
+  color: black;
   cursor: pointer;
   padding: 15px;
   border-radius: 20px;
   font-size: 18px;
 }
 
-#myBtn:hover {
-  background-color: #555;
-}
+#myBtn:hover {background-color: #dddddd;}
 
 .flex-comment{
   display: flex;
@@ -140,9 +142,12 @@
   justify-content: space-between;
   flex-wrap: nowrap;
 }
-.flex-comment p{
-  width: 500px;
-}
-.flex-comment form{
-  width: 50px;
+.flex-comment p{width: 500px;}
+.flex-comment form{width: 50px;}
+.space{margin: 10px;}
+
+.background{
+  background-color: white;
+  width: 100%;
+  height: 100%;
 }

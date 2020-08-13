@@ -12,8 +12,8 @@ class Post(models.Model):
     is_active = models.BooleanField(default=True)
     is_archived = models.BooleanField(default=False)
     is_deleted = models.BooleanField(default=False)
+    likes = models.ManyToManyField(Account, related_name="like_post", blank=True)
     date = models.DateTimeField(auto_now=False, auto_now_add=True)
-    likes = models.ManyToManyField(Account, related_name="likes", blank=True)
 
 
 class Comment(models.Model):
@@ -22,7 +22,7 @@ class Comment(models.Model):
     comment = models.CharField(max_length=500, null=True)
     is_active = models.BooleanField(default=True)
     is_deleted = models.BooleanField(default=False)
-    likes = models.ManyToManyField(Account, related_name="comment_likes", blank=True)
+    likes = models.ManyToManyField(Account, related_name="like_comment", blank=True)
     date = models.DateTimeField(auto_now=False, auto_now_add=True)
 
 

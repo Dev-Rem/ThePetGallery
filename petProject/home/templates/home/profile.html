@@ -3,58 +3,62 @@
 {% load static %}
 {% if user.is_authenticated %}
   {% block content %}
-  <div class="">
-    <div class="details-header">
-      <div class="profile-picture">
-        {% if image == None %}
-          <img src="{% static 'default_img.jpg' %}" alt="">
-        {% else %}
-          <img src="{{ image.image.url }}" alt="Profile Photo">
-        {% endif %}
-      </div>
-      <div class="profile-info">
-        <ul>
-          {% if account.username %}
-          <li>{{ account.username }}</li>
-          {% endif %} {% if account.name %}
-          <li>{{ account.name }}</li>
-          {% endif %} {% if account.animal %}
-          <li>{{ account.animal }}</li>
-          {% endif %} {% if account.breed %}
-          <li>{{ account.breed }}</li>
-          {% endif %} {% if account.bio %}
-          <li>{{ account.bio }}</li>
-          {% endif %}
-        </ul>
-      </div>
-      <div class="followers-following">
-        <h4>Following</h4>
-        <h4>Followers</h4>
-      </div>
-        {% if account == request.user %}
-        <div class="btn-group dropright" style="width:70px; height:50px; margin-top:20px">
-          <button class="btn  dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <svg width="2em" height="2em" viewBox="0 0 16 16" class="bi bi-list" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-              <path fill-rule="evenodd" d="M2.5 11.5A.5.5 0 0 1 3 11h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 3 7h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 3 3h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
-            </svg>
-          </button>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a href="/{{ request.user.username }}/edit-profile">
-              <button type="button" name="archive" style="color:blue" class="btn">Edit Profile</button>
-            </a>
-            <a href="/{{ account.username }}/archive">
-              <button type="button" name="archive" style="color:blue" class="btn">Archive</button>
-            </a>
-            <a href="/logout">
-              <button style="color:red"class="btn" type="button">Logout</button>
-            </a>
-          </div>
-        </div>
-        {% endif %}
-    </div>
-    <div class="details-buttons">
 
-      <hr>
+      <div class="background">
+        <div class="details-header">
+          <div class="profile-picture">
+            {% if image == None %}
+              <img src="{% static 'default_img.jpg' %}" alt="">
+            {% else %}
+              <img src="{{ image.image.url }}" alt="Profile Photo">
+            {% endif %}
+          </div>
+          <div class="profile-info">
+            <ul>
+              {% if account.name %}
+                <li>Name: {{ account.name | title  }}</li>
+              {% endif %}
+              {% if account.animal %}
+                <li>Animal: {{ account.animal | title }}</li>
+              {% endif %}
+              {% if account.breed %}
+                <li>Breed: {{ account.breed | title }}</li>
+              {% endif %}
+              {% if account.bio %}
+                <li>Bio: {{ account.bio | title }}</li>
+              {% endif %}
+            </ul>
+          </div>
+          <div class="followers-following">
+            <h4>Following</h4>
+            <h4>Followers</h4>
+          </div>
+            {% if account == request.user %}
+            <div class="btn-group dropright" style="width:70px; height:50px; margin-top:20px">
+              <button class="btn  dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-three-dots-vertical" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                </svg>
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a href="/{{ request.user.username }}/edit-profile">
+                  <button type="button" name="archive" style="color:blue" class="btn">Edit Profile</button>
+                </a>
+                <a href="/{{ account.username }}/archive">
+                  <button type="button" name="archive" style="color:blue" class="btn">Archive</button>
+                </a>
+                <a href="/password_change">
+                  <button style="color:blue"class="btn" type="button">Change password</button>
+                </a>
+                <a href="/logout">
+                  <button style="color:red"class="btn" type="button">Logout</button>
+                </a>
+
+              </div>
+            </div>
+            {% endif %}
+      </div>
+
     </div>
 <div class="details-content">
   {% if posts %}
@@ -77,9 +81,6 @@
   </ul>
   {% endif %}
 </div>
-
-
-  </div>
   {% endblock%}
   {% else %}
   <p>Oops you are not logged in yet please do so. <a href="/login">Log in</a> </p>
