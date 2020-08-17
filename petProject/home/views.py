@@ -18,7 +18,7 @@ def index(request):
     comments = None
     for post in posts:
         images = post.image_set.all()
-        comments = Comment.objects.filter(post=post, is_active=True).order_by("-date")
+        comments = Comment.objects.filter(post=post, is_active=True)
     return render(
         request,
         "home/index.html",

@@ -41,6 +41,12 @@ INSTALLED_APPS = [
     "crispy_forms",
     "post",
     "home",
+    "social_django",
+]
+
+AUTHENTICATION_BACKENDS = [
+    "social_core.backends.google.GoogleOAuth2",
+    "django.contrib.auth.backends.ModelBackend",
 ]
 
 MIDDLEWARE = [
@@ -51,6 +57,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "social_django.middleware.SocialAuthExceptionMiddleware",
 ]
 
 ROOT_URLCONF = "petProject.urls"
@@ -67,6 +74,8 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "django.template.context_processors.media",
+                "social_django.context_processors.backends",
+                "social_django.context_processors.login_redirect",
             ],
         },
     },
@@ -122,7 +131,6 @@ STATICFILES_DIRS = [
     "/Users/Rem_files/Desktop/Web_dev/petProject/petProject/static/style.css",
 ]
 
-
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
@@ -132,8 +140,11 @@ LOGIN_URL = "/login"
 LOGIN_REDIRECT_URL = "/profile-photo"
 LOGOUT_REDIRECT_URL = "/login"
 
-
 AUTH_USER_MODEL = "user.Account"
 
-
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = (
+    "386259464098-t4m58ks49kb7gtf7fp6sk9d9h7e1aceh.apps.googleusercontent.com"
+)
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "pxbg08l9s-zFNTcgYh1yeGXt"
