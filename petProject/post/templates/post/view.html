@@ -55,7 +55,7 @@
     <form method="post">
       {% csrf_token %}
       {{ form|crispy }}
-      <button type="submit" style="color:blue" id="button-hover" class="btn">Comment</button>
+      <button type="submit" style="color:blue; margin-bottom: 20px" id="button-hover" class="btn">Comment</button>
     </form>
 
     {% for comment in comments %}

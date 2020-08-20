@@ -70,7 +70,7 @@ def edit_profile(request, username):
         if form.is_valid():
             form.save()
             messages.success(request, "Profile successfully updated")
-            return redirect("home:profile", username=username)
+            return redirect("home:profile", username=request.user.username)
     else:
         form = SignUpEditForm(instance=account)
     return render(request, "home/edit_profile.html", {"form": form})
