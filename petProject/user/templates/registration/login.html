@@ -13,9 +13,9 @@
         {{ form|crispy }}
         <h6>Forgotten password? <a href="/password_reset">Click here</a> </h6>
         <h6>Don't have an account? <a href="/sign-up/">Sign Up</a> </h6>
-        <button type="submit" class="btn btn-primary">Login</button> -or-
+        <button type="submit" style="color:blue;" id="button-hover" class="btn">Login</button> -or-
         <a href="{% url 'social:begin' 'google-oauth2' %}">
-          <button type="button" class="btn btn-danger" name="button">Google+</button>
+          <button type="button" style="color:blue;" class="btn" id="button-hover" name="button">Google+</button>
         </a>
       </form>
     </div>

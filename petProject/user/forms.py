@@ -8,7 +8,6 @@ class SignUpForm(UserCreationForm):
     class Meta:
         model = Account
         fields = [
-            "name",
             "username",
             "email",
             "breed",
@@ -24,7 +23,6 @@ class SignUpEditForm(ModelForm):
     class Meta:
         model = Account
         fields = [
-            "name",
             "username",
             "email",
             "breed",

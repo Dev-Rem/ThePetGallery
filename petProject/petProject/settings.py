@@ -25,7 +25,7 @@ SECRET_KEY = "7vtqto&bif=unv(qe)2dqe3kh@b-w=m)m5kp&kd24$r+=4iqjo"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["thepetgallery.com", "localhost", "127.0.0.1"]
 
 
 # Application definition

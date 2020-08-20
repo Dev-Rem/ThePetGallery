@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
+from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_http_methods
 from post.forms import PostForm, CommentForm, ImageForm
@@ -68,6 +69,7 @@ def edit_profile(request, username):
     if request.method == "POST":
         if form.is_valid():
             form.save()
+            messages.success(request, "Profile successfully updated")
             return redirect("home:profile", username=username)
     else:
         form = SignUpEditForm(instance=account)

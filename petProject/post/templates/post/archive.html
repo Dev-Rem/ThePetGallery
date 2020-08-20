@@ -17,10 +17,10 @@
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
           <form method="post">
             {% csrf_token %}
-            <button type="submit" name="remove_from_archive" class="btn">Show on profile</button>
+            <button type="submit" name="remove_from_archive" id="button-hover" class="btn">Show on profile</button>
           </form>
           <a href="/{{ post.id }}/delete">
-            <button type="button" name="delete" class="btn"> Delete</button>
+            <button type="button" name="delete" id="button-hover" class="btn"> Delete</button>
           </a>
         </div>
       </div>

@@ -4,6 +4,15 @@
 {% if user.is_authenticated %}
   {% block content %}
 
+      {% if messages %}
+            {% for message in messages %}
+            <div style="margin-bottom:0;" class="alert alert-{{ message.tags }}">
+              {{ message }}
+            </div>
+            {% endfor %}
+      {% endif %}
+
+
       <div class="background">
         <div class="details-header">
           <div class="profile-picture">
@@ -15,8 +24,8 @@
           </div>
           <div class="profile-info">
             <ul>
-              {% if account.name %}
-                <li>Name: {{ account.name | title  }}</li>
+              {% if account.username %}
+                <li>Username: {{ account.username | title  }}</li>
               {% endif %}
               {% if account.animal %}
                 <li>Animal: {{ account.animal | title }}</li>
@@ -42,16 +51,16 @@
               </button>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                 <a href="/{{ request.user.username }}/edit-profile">
-                  <button type="button" name="archive" style="color:blue" class="btn">Edit Profile</button>
+                  <button type="button" name="archive" id="button-hover" style="color:blue" class="btn">Edit Profile</button>
                 </a>
                 <a href="/{{ account.username }}/archive">
-                  <button type="button" name="archive" style="color:blue" class="btn">Archive</button>
+                  <button type="button" name="archive" id="button-hover" style="color:blue" class="btn">Archive</button>
                 </a>
                 <a href="/password_change">
-                  <button style="color:blue"class="btn" type="button">Change password</button>
+                  <button style="color:blue" id="button-hover" class="btn" type="button">Change password</button>
                 </a>
                 <a href="/logout">
-                  <button style="color:red"class="btn" type="button">Logout</button>
+                  <button style="color:red"class="btn" id="button-hover" type="button">Logout</button>
                 </a>
 
               </div>

@@ -15,15 +15,15 @@
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
           <a href="/{{ post.id }}/edit">
-            <button type="button" name="edit" style="color:blue" class="btn"> Edit</button>
+            <button type="button" name="edit" style="color:blue" id="button-hover" class="btn"> Edit</button>
           </a>
 
           <form method="post">
             {% csrf_token %}
-            <button type="submit" name="archive" value="archive" style="color:blue" class="btn"> Archive</button>
+            <button type="submit" name="archive" value="archive" style="color:blue" id="button-hover" class="btn"> Archive</button>
           </form>
           <a href="/{{ post.id }}/delete">
-            <button type="button" name="delete" style="color:Red" class="btn"> Delete</button>
+            <button type="button" name="delete" style="color:Red" id="button-hover" class="btn"> Delete</button>
           </a>
         </div>
       </div>
@@ -48,14 +48,14 @@
 
       <form  method="post">
         {% csrf_token %}
-          <button type="submit" name="like_post" value="{{ post.id }}" style="color:blue" class="btn">Like</button>
-          <button type="submit" name="dislike_post" value="{{ post.id }}" style="color:red" class="btn">Dislike</button>
+          <button type="submit" name="like_post" value="{{ post.id }}" style="color:blue" id="button-hover" class="btn">Like</button>
+          <button type="submit" name="dislike_post" value="{{ post.id }}" style="color:red" id="button-hover" class="btn">Dislike</button>
       </form>
 
     <form method="post">
       {% csrf_token %}
       {{ form|crispy }}
-      <button type="submit" style="color:blue" class="btn">Comment</button>
+      <button type="submit" style="color:blue" id="button-hover" class="btn">Comment</button>
     </form>
 
     {% for comment in comments %}
@@ -76,9 +76,9 @@
               </button>
               <div class="dropdown-menu">
                 <a href="/{{ comment.id }}/edit-comment">
-                  <button type="button" style="color:blue" name="edit_comment" class="btn">Edit</button>
+                  <button type="button" style="color:blue" name="edit_comment" id="button-hover" class="btn">Edit</button>
                 </a>
-                <button type="submit" name="delete_comment" value="{{ comment.id }}" style="color:Red" class="btn">Delete</button>
+                <button type="submit" name="delete_comment" value="{{ comment.id }}" style="color:Red" id="button-hover" class="btn">Delete</button>
               </div>
             </div>
           </form>
@@ -89,8 +89,8 @@
 
         <form method="post">
           {% csrf_token %}
-            <button type="submit" name="like_comment" value="{{ comment.id }}" style="color:blue" class="btn">Like</button>
-            <button type="submit" name="dislike_comment" value="{{ comment.id }}" style="color:red" class="btn">Dislike</button>
+            <button type="submit" name="like_comment" value="{{ comment.id }}" style="color:blue" id="button-hover" class="btn">Like</button>
+            <button type="submit" name="dislike_comment" value="{{ comment.id }}" style="color:red" id="button-hover" class="btn">Dislike</button>
         </form>
     {% endfor %}
   </div>
