@@ -1,7 +1,8 @@
 
 body{
-  background-image: url('background.png');
-  background-size: auto;
+  background-image: url('pexels-henda-watani-320014.jpg');
+  background-size: contain;
+  background-attachment: fixed;
 }
 .create-post{
   color: #343A40;
