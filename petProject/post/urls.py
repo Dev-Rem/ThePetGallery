@@ -10,5 +10,5 @@ urlpatterns = [
     path("<int:pk>/edit/", views.edit_post, name="edit"),
     path("<int:pk>/edit-comment", views.edit_comment, name="edit_comment"),
     path("<int:pk>/delete", views.delete_post, name="delete"),
-    path("<str:username>/archive/", views.archive_post, name="archive"),
+    path("<str:username>/archive/", views.archive_post, name="archive_post"),
 ]

@@ -32,6 +32,7 @@ class AccountManager(BaseUserManager):
 class Account(AbstractBaseUser):
     email = models.EmailField(verbose_name="email", max_length=100, unique=True)
     username = models.CharField(verbose_name="username", max_length=50, unique=True)
+    name = models.CharField(verbose_name="name", max_length=50, null=True)
     breed = models.CharField(max_length=30, null=True, blank=True)
     animal = models.CharField(max_length=50, null=True, blank=True)
     profile_photo = models.ImageField(upload_to="images/", blank=True)
@@ -51,7 +52,7 @@ class Account(AbstractBaseUser):
     is_superuser = models.BooleanField(default=False)
 
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ["username", "name"]
+    REQUIRED_FIELDS = ["username"]
     objects = AccountManager()
 
     def __str__(self):

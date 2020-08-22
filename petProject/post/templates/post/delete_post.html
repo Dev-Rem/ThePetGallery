@@ -8,7 +8,7 @@
     <h4>Are you sure you want to delete this post forever?</h4>
     <form  method="post">
       {% csrf_token %}
-      <button type="submit" style="color:red" id="button-hover" class="btn">Yes</button>
+      <button type="submit" name="delete_post" style="color:red" id="button-hover" class="btn">Yes</button>
       <a href="/{{ post.id }}/view">
         <button type="button" style="color:blue" name="button" id="button-hover" class="btn">No</button>
       </a>
@@ -33,23 +33,4 @@
   </div>
 </div>
 
-<script>
-
-var slideIndex = 1;
-showDivs(slideIndex);
-function plusDivs(n) {
-  showDivs(slideIndex += n);
-}
-function showDivs(n) {
-  var i;
-  var x = document.getElementsByClassName("mySlides");
-  if (n > x.length) {slideIndex = 1}
-  if (n < 1) {slideIndex = x.length}
-  for (i = 0; i < x.length; i++) {
-     x[i].style.display = "none";
-  }
-  x[slideIndex-1].style.display = "block";
-}
-
-</script>
 {% endblock %}

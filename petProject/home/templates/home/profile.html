@@ -3,16 +3,8 @@
 {% load static %}
 {% if user.is_authenticated %}
   {% block content %}
-
-      {% if messages %}
-            {% for message in messages %}
-            <div style="margin-bottom:0;" class="alert alert-{{ message.tags }}">
-              {{ message }}
-            </div>
-            {% endfor %}
-      {% endif %}
-
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+{% include 'home/alerts.html' %}
       <div class="background">
         <div class="details-header">
           <div class="profile-picture">
@@ -38,10 +30,6 @@
               {% endif %}
             </ul>
           </div>
-          <!-- <div class="followers-following">
-            <h4>Following</h4>
-            <h4>Followers</h4>
-          </div> -->
             {% if account == request.user %}
             <div class="btn-group dropright" style="width:70px; height:50px; margin-top:20px">
               <button class="btn  dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -93,4 +81,5 @@
   {% endblock%}
   {% else %}
   <p>Oops you are not logged in yet please do so. <a href="/login">Log in</a> </p>
+
 {% endif %}

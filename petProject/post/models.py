@@ -20,6 +20,9 @@ class Comment(models.Model):
     post = models.ForeignKey(Post, null=True, on_delete=models.CASCADE)
     account = models.ForeignKey(Account, null=True, on_delete=models.CASCADE)
     comment = models.CharField(max_length=500, null=True)
+    reply = models.ForeignKey(
+        "self", null=True, related_name="replies", on_delete=models.CASCADE
+    )
     is_active = models.BooleanField(default=True)
     is_deleted = models.BooleanField(default=False)
     likes = models.ManyToManyField(Account, related_name="like_comment", blank=True)

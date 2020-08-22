@@ -2,6 +2,7 @@
 {% load static %}
 {% load crispy_forms_tags %}
 {% block content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <button onclick="topFunction()" id="myBtn" title="Go to top">Back to top</button>
 <div class="card">
   <div class="details-header">
@@ -18,9 +19,10 @@
             <button type="button" name="edit" style="color:blue" id="button-hover" class="btn"> Edit</button>
           </a>
 
-          <form method="post">
+          <form method="post" action="{% url 'post:archive_post' username=request.user.username %}">
+            <input type="hidden" name="post_id" value="{{ post.id }}">
             {% csrf_token %}
-            <button type="submit" name="archive" value="archive" style="color:blue" id="button-hover" class="btn"> Archive</button>
+            <button type="submit" name="archive_post" value="archive" style="color:blue" id="button-hover" class="btn"> Archive</button>
           </form>
           <a href="/{{ post.id }}/delete">
             <button type="button" name="delete" style="color:Red" id="button-hover" class="btn"> Delete</button>
@@ -46,58 +48,17 @@
       <h6>{{ post.caption }}</h6>
         <h6>Likes: {{ post.likes.count }}, Comments: {{ comments.count }} </h6>
 
-      <form  method="post">
+      <form method="post" >
         {% csrf_token %}
-          <button type="submit" name="like_post" value="{{ post.id }}" style="color:blue" id="button-hover" class="btn">Like</button>
+        {% if post_liked %}
           <button type="submit" name="dislike_post" value="{{ post.id }}" style="color:red" id="button-hover" class="btn">Dislike</button>
+        {% else %}
+          <button type="submit" name="like_post" value="{{ post.id }}" style="color:blue" id="button-hover" class="btn">Like</button>
+        {% endif %}
       </form>
-
-    <form method="post">
-      {% csrf_token %}
-      {{ form|crispy }}
-      <button type="submit" style="color:blue; margin-bottom: 20px" id="button-hover" class="btn">Comment</button>
-    </form>
-
-    {% for comment in comments %}
-        <hr>
-        <div class="flex-comment">
-          <blockquote class="blockquote">
-            <h6 class="mb-0">{{ comment.comment|capfirst }}</h6>
-            <footer class="blockquote-footer"> <cite title="Source Title">{{ comment.account.username|title }}</cite></footer>
-          </blockquote>
-          {% if request.user == comment.account %}
-          <form method="post">
-            {% csrf_token %}
-            <div class="btn-group dropright">
-              <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-three-dots-vertical" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                  <path fill-rule="evenodd" d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
-                </svg>
-              </button>
-              <div class="dropdown-menu">
-                <a href="/{{ comment.id }}/edit-comment">
-                  <button type="button" style="color:blue" name="edit_comment" id="button-hover" class="btn">Edit</button>
-                </a>
-                <button type="submit" name="delete_comment" value="{{ comment.id }}" style="color:Red" id="button-hover" class="btn">Delete</button>
-              </div>
-            </div>
-          </form>
-          {% endif %}
-        </div>
-
-        <h6>Likes: {{ comment.likes.count }}</h6>
-
-        <form method="post">
-          {% csrf_token %}
-            <button type="submit" name="like_comment" value="{{ comment.id }}" style="color:blue" id="button-hover" class="btn">Like</button>
-            <button type="submit" name="dislike_comment" value="{{ comment.id }}" style="color:red" id="button-hover" class="btn">Dislike</button>
-        </form>
-    {% endfor %}
+      
+      {% include 'post/comment.html' %}
   </div>
 </div>
 
-
-<script src="{% static 'style.js' %}">
-
-</script>
 {% endblock %}

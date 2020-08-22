@@ -1,6 +1,8 @@
 {% extends 'home/base_layout.html' %}
 {% load static %}
 {% block content %}
+{% include 'home/alerts.html' %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <button onclick="topFunction()" id="myBtn" title="Go to top">Back to top</button>
 <ul>
   {% for post in posts %}
@@ -15,12 +17,10 @@
         {% endfor %}
         <div class="details-buttons">
           <h6>{{ post.caption }}</h6>
-          <h6>Likes: {{ post.likes.count }}, Comments: {{ comments.count }} </h6>
-
+          <h6>Likes: {{ post.likes.count }}</h6>
         </div>
     </li>
   {% endfor %}
 </ul>
-<script src="{% static 'style.js' %}">
-</script>
+
 {% endblock %}

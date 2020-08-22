@@ -1,8 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.forms import formset_factory
+from django.contrib import messages
 from .models import Post, Comment, Image
 from .forms import PostForm, CommentForm, ImageForm
 from user.models import Account
+from django.template.loader import render_to_string
+from django.http import JsonResponse
 
 # Create your views here.
 
@@ -25,9 +28,11 @@ def create_post(request):
                         else:
                             image = Image(post=post, image=image_form["image"])
                             image.save()
+                    messages.success(request, "Post successfully created")
                     return redirect("home:index")
                 break
             else:
+                messages.error(request, "No image added")
                 return redirect(request.path_info)
     else:
         form = PostForm()
@@ -72,45 +77,64 @@ def view_post(request, pk):
     form = form_class(request.POST or None)
     post = get_object_or_404(Post, pk=pk)
     images = Image.objects.filter(post=post)
-    comments = Comment.objects.filter(post=post, is_active=True).order_by("-date")
-    print(comments.count())
+    post_liked = False
+    comment_liked = False
+    if post.likes.filter(id=request.user.id).exists():
+        post_liked = True
+    comments = Comment.objects.filter(post=post, is_active=True, reply=None).order_by(
+        "-date"
+    )
     if request.method == "POST":
         if "comment" in request.POST:
             if form.is_valid():
+                reply_id = request.POST.get("comment_id")
+                comment_qs = None
+                if reply_id:
+                    print(reply_id)
+                    comment_qs = Comment.objects.get(id=reply_id)
+                    print(comment_qs)
                 new_comment = form.save(commit=False)
-                new_comment.post, new_comment.account = post, request.user
+                new_comment.post, new_comment.account, new_comment.reply = (
+                    post,
+                    request.user,
+                    comment_qs,
+                )
                 new_comment.save()
-                return redirect(request.path_info)
-        elif "archive" in request.POST:
-            post.is_active, post.is_archived = False, True
-            post.save()
-            return redirect("home:index")
-        elif "like_post" in request.POST:
+        return redirect(request.path_info)
+
+        if "like_post" in request.POST:
             post.likes.add(request.user)
             post.save()
+            post_liked = True
             return redirect(request.path_info)
-        elif "dislike_post" in request.POST:
+        if "dislike_post" in request.POST:
             post.likes.remove(request.user)
             post.save()
+            post_liked = False
             return redirect(request.path_info)
-        elif "like_comment" in request.POST:
+        if "like_comment" in request.POST:
             comment = Comment.objects.get(pk=request.POST.get("like_comment"))
             comment.likes.add(request.user)
             comment.save()
+            comment_liked = True
             return redirect(request.path_info)
-        elif "dislike_comment" in request.POST:
+        if "dislike_comment" in request.POST:
             comment = Comment.objects.get(pk=request.POST.get("dislike_comment"))
             comment.likes.remove(request.user)
             comment.save()
+            comment_liked = False
             return redirect(request.path_info)
-        elif "delete_comment" in request.POST:
-            comment = Comment.objects.get(pk=request.POST.get("delete_comment"))
-            comment.is_active, comment.is_deleted = False, True
-            comment.save()
     return render(
         request,
         "post/view.html",
-        {"post": post, "comments": comments, "form": form, "images": images,},
+        {
+            "post": post,
+            "comments": comments,
+            "form": form,
+            "images": images,
+            "post_liked": post_liked,
+            # "comment_liked": comment_liked,
+        },
     )
 
 
@@ -119,9 +143,15 @@ def delete_post(request, pk):
     images = Image.objects.filter(post=post)
     comments = Comment.objects.filter(post=post, is_active=True).order_by("-date")
     if request.method == "POST":
-        post.is_active, post.is_deleted = False, True
-        post.save()
-        return redirect("home:index")
+        if "delete_post" in request.POST:
+            post.is_active, post.is_deleted = False, True
+            post.save()
+            return redirect("home:index")
+        if "delete_comment" in request.POST:
+            comment = Comment.objects.get(pk=request.POST.get("delete_comment"))
+            comment.is_active, comment.is_deleted = False, True
+            comment.save()
+            return redirect("post:view", pk=pk)
     return render(
         request,
         "post/delete_post.html",
@@ -151,10 +181,16 @@ def archive_post(request, username):
         images = post.image_set.all()
         comments = Comment.objects.filter(post=post, is_active=True).order_by("-date")
     if request.method == "POST":
-        post.is_active = True
-        post.is_archived = False
-        post.save()
-        return redirect("home:index")
+        if "archive_post" in request.POST:
+            post = Post.objects.get(id=request.POST.get("post_id"))
+            post.is_active, post.is_archived = False, True
+            post.save()
+            return redirect("home:index")
+        if "unarchive_post" in request.POST:
+            post = Post.objects.get(id=request.POST.get("post_id"))
+            post.is_active, post.is_archived = True, False
+            post.save()
+            return redirect("home:index")
     return render(
         request,
         "post/archive.html",

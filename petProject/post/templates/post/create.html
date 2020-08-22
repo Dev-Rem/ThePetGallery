@@ -3,6 +3,15 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
+
+{% if messages %}
+      {% for message in messages %}
+      <div style="margin-bottom:0;" class="alert alert-danger">
+        {{ message }}
+      </div>
+      {% endfor %}
+{% endif %}
+
 <div class="card">
   <div class="details-header">
       <h2 style="margin-top:30px">Create new post</h2>

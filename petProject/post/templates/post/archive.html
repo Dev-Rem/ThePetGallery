@@ -15,9 +15,10 @@
           </svg>
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <form method="post">
+          <form method="post" action="{% url 'post:archive_post' username=request.user.username %}">
             {% csrf_token %}
-            <button type="submit" name="remove_from_archive" id="button-hover" class="btn">Show on profile</button>
+              <input type="hidden" name="post_id" value="{{ post.id }}">
+            <button type="submit" name="unarchive_post" id="button-hover" class="btn">Show on profile</button>
           </form>
           <a href="/{{ post.id }}/delete">
             <button type="button" name="delete" id="button-hover" class="btn"> Delete</button>

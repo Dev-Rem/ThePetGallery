@@ -1,4 +1,5 @@
 from django.forms import ModelForm
+from crispy_forms.helper import FormHelper
 from .models import Post, Comment, Image
 
 
@@ -12,6 +13,10 @@ class CommentForm(ModelForm):
     class Meta:
         model = Comment
         fields = ["comment"]
+
+    def __init__(self, *args, **kwargs):
+        super(CommentForm, self).__init__(*args, **kwargs)
+        self.fields["comment"].label = ""
 
 
 class ImageForm(ModelForm):
