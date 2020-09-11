@@ -1,0 +1,61 @@
+{% extends 'home/base_layout.html' %}
+  {% block content %}
+<div class="card">
+  <div class="details-header">
+    <h2 style="margin-top:30px">Followers and Following</h2>
+  </div>
+  <div class="details-buttons">
+    <hr>
+    <ul class="nav nav-tabs">
+      <li class="nav-item">
+        <a class="nav-link active" data-toggle="tab" href="#home">Followers</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#profile">Following</a>
+      </li>
+    </ul>
+    <div id="myTabContent" class="tab-content">
+      <div class="tab-pane fade active show" id="home">
+        {% if follow == None %}
+          <div class="no-follow">
+            <h4>No followers yet</h4>
+          </div>
+        {% else %}
+          <ul class="follow">
+            {% for follower in followers %}
+              <li>
+                <a href="#">{{ follower.username }}</a>
+              </li>
+              <hr>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+      <div class="tab-pane fade" id="profile">
+        {% if follow == None %}
+          <div class="no-follow">
+            <h4>No following anyone yet</h4>
+          </div>
+        {% else %}
+          <ul class="follow">
+            {% for follow in following %}
+              <li>
+                <div class="">
+                  <a href="#">{{ follow.username }}</a>
+                </div>
+                <div class="">
+                  <form method="post">
+                    {% csrf_token %}
+                    <button type="submit" name="unfollow" value="{{ follow }}" class="btn">Unfollow</button>
+                  </form>
+                </div>
+              </li>
+              <hr>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

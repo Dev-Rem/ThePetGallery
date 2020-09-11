@@ -153,13 +153,12 @@ body{
   height: 100%;
 }
 
-#button-hover:hover {background-color: #dddddd;}
+.link-hover:hover {text-decoration: none;}
 
 .replied-comments{
   max-width: 300px;
   width: 100%;
   margin-left: 30px;
-
 }
 .no-post{
   width: 700px;
@@ -171,8 +170,6 @@ body{
   border-radius: 10px;
   display: flex;
   flex-direction: column;
-
-
 }
 .no-post div{
   margin: 0 auto;
@@ -181,5 +178,19 @@ body{
   width: 150px;
   height: 150px;
   margin: 0 auto;
+}
+
+
+.follow{
+  list-style: none;
+  padding: 0;
+}
+.follow li{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 20px 10px;
+  height: 20px;
+  width: 100%;
 
 }

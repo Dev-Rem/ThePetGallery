@@ -30,6 +30,21 @@
               {% endif %}
             </ul>
           </div>
+          <div class="follow">
+            <a href="/{{ account.username }}/follow">
+              <h6>Follows</h6>
+            </a>
+
+            <form  method="post">
+              {% csrf_token %}
+              <button type="submit" name="follow" class="btn"> Follow</button>
+            </form>
+            <form method="post">
+              {% csrf_token %}
+              <button type="submit" name="unfollow" class="btn">Unfollow</button>
+            </form>
+
+          </div>
             {% if account == request.user %}
             <div class="btn-group dropright" style="width:70px; height:50px; margin-top:20px">
               <button class="btn  dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -38,17 +53,20 @@
                 </svg>
               </button>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a href="/{{ request.user.username }}/edit-profile">
-                  <button type="button" name="archive" id="button-hover" style="color:blue" class="btn">Edit Profile</button>
+                <a class="link-hover"  href="/{{ request.user.username }}/edit-profile">
+                  <button type="button" name="archive" id="button-hover" style="color:blue" class="dropdown-item">Edit Profile</button>
                 </a>
-                <a href="/{{ account.username }}/archive">
-                  <button type="button" name="archive" id="button-hover" style="color:blue" class="btn">Archive</button>
+                <a class="link-hover"  href="/profile-photo">
+                  <button type="button" name="archive" id="button-hover" style="color:blue" class="dropdown-item">Update profile picture</button>
                 </a>
-                <a href="/password_change">
-                  <button style="color:blue" id="button-hover" class="btn" type="button">Change password</button>
+                <a class="link-hover"  href="/{{ account.username }}/archive">
+                  <button type="button" name="archive" id="button-hover" style="color:blue" class="dropdown-item">Archive</button>
                 </a>
-                <a href="/logout">
-                  <button style="color:red"class="btn" id="button-hover" type="button">Logout</button>
+                <a class="link-hover"  href="/password_change">
+                  <button style="color:blue" id="button-hover" class="dropdown-item" type="button">Change password</button>
+                </a>
+                <a class="link-hover" href="/logout">
+                  <button style="color:red" class="dropdown-item" type="button">Logout</button>
                 </a>
 
               </div>

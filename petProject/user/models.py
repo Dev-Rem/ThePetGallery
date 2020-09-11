@@ -63,3 +63,12 @@ class Account(AbstractBaseUser):
 
     def has_module_perms(self, app_label):
         return True
+
+
+class Follow(models.Model):
+    account = models.ForeignKey(Account, null=True, on_delete=models.CASCADE)
+    followers = models.ManyToManyField(Account, related_name="following")
+    following = models.ManyToManyField(Account, related_name="followers")
+
+    def __unicode__(self):
+        return u"%s follows %s" % (self.follower, self.following)
